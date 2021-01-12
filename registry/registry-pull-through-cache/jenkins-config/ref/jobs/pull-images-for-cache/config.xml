@@ -1,0 +1,60 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.17">
+  <actions/>
+  <description>Pull images from DockerHub and cache them in Registry Mirror</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+      <triggers>
+        <org.jenkinsci.plugins.registry.notification.DockerHubTrigger plugin="dockerhub-notification@2.2.1">
+          <spec></spec>
+          <options class="vector">
+            <org.jenkinsci.plugins.registry.notification.opt.impl.TriggerForAllUsedInJob/>
+            <org.jenkinsci.plugins.registry.notification.opt.impl.TriggerOnSpecifiedImageNames>
+              <repoNames>
+                <string>quickdevnotes/busybox</string>
+              </repoNames>
+            </org.jenkinsci.plugins.registry.notification.opt.impl.TriggerOnSpecifiedImageNames>
+          </options>
+        </org.jenkinsci.plugins.registry.notification.DockerHubTrigger>
+      </triggers>
+    </org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.45">
+    <script>
+      pipeline {
+        agent any
+        stages {
+          stage('Verify Environment') {
+            steps {
+              sh 'env'
+              sh 'docker info'
+            }
+          }
+          stage('Registry Mirror before Pull') {
+            steps {
+              sh 'curl -s http://13.233.121.114:5000/v2/_catalog'
+            }
+          }
+          stage('Pull image from DockerHub') {
+            steps {
+              sh 'docker pull quickdevnotes/busybox'
+            }
+          }
+          stage('Registry Mirror after Pull') {
+            steps {
+              sh 'curl -s http://13.233.121.114:5000/v2/_catalog'
+            }
+          }
+          stage('Delete unused images') {
+            steps {
+              sh 'docker image prune -af'
+            }
+          }    
+        }
+      }
+    </script>
+  <sandbox>true</sandbox>
+  </definition>
+  <disabled>false</disabled>
+</flow-definition>

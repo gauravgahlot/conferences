@@ -1,0 +1,39 @@
+version: "3.5"
+
+services:
+  registry-mirror:
+    image: registry:2
+    ports:
+      - "5000:5000"
+    volumes:
+      - registry-mirror:/var/lib/registry
+    restart: unless-stopped
+    environment:
+      REGISTRY_PROXY_REMOTEURL: https://registry-1.docker.io
+
+  requestbin:
+    image: weshigbee/requestbin
+    ports:
+      - "8000:8000"
+  
+  dind:
+    image: docker:dind
+    privileged: true
+    volumes: 
+      - dind-data-root:/var/lib/docker
+      - ./daemon.json:/etc/docker/daemon.json
+      
+  jenkins:
+    build: ./jenkins-config
+    volumes:
+      - jenkins-config:/var/jenkins_home
+    ports:
+      - "8080:8080"
+    environment:
+      DOCKER_HOST: tcp://dind:2375
+
+    
+volumes:
+  registry-mirror:
+  jenkins-config:
+  dind-data-root:    
