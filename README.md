@@ -1,15 +1,15 @@
-# Demos
+# Conferences
 
-A collection of demos from my talks.
+The repository contains slides, demos and anything else I ever used for any of my talks.
 
-## Contents
+## Table of Content
 
-- [Hosting a Private Docker Registry](/registry)
-    - [Running the first Registry Server](/registry/01-running-first-registry-server.md)
-    - [Pulling an Image from Registry Server](/registry/02-pull-an-image-from-registry.md)
-    - [Preserving registry data in a named Docker Volume](/registry/03-preserving-registry-data.md)
-    - [Securing the Registry with Basic-Auth (htpasswd)](/registry/04-securing-registry-with-basic-auth.md)
-    - [Adding a User Interface to Registry](/registry/05-add-registry-UI.md)
-    - [Docker Registry as Pull Through Cache](/registry/registry-pull-through-cache)
+- [Slides](slides)
+  - [2021](slides/2021)
+    - [May](slides/2021/05)
+      - [DevSecOps](slides/2021/05/devsecops-docker-container-security-101.pdf)
+  - [2019](slides/2019)
+- [Demos](demos)
+
 
 
